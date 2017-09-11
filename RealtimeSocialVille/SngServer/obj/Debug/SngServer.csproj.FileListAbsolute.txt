@@ -1,0 +1,14 @@
+C:\Users\Jenifer Sung\Desktop\서버 프로젝트\RealtimeSocialVille\SngServer\bin\Debug\SngServer.exe.config
+C:\Users\Jenifer Sung\Desktop\서버 프로젝트\RealtimeSocialVille\SngServer\obj\Debug\SngServer.csprojResolveAssemblyReference.cache
+C:\Users\Jenifer Sung\Desktop\서버 프로젝트\RealtimeSocialVille\SngServer\bin\Debug\SngServer.exe
+C:\Users\Jenifer Sung\Desktop\서버 프로젝트\RealtimeSocialVille\SngServer\bin\Debug\SngServer.pdb
+C:\Users\Jenifer Sung\Desktop\서버 프로젝트\RealtimeSocialVille\SngServer\bin\Debug\ProudDotNetClient.dll
+C:\Users\Jenifer Sung\Desktop\서버 프로젝트\RealtimeSocialVille\SngServer\bin\Debug\ProudDotNetServer.dll
+C:\Users\Jenifer Sung\Desktop\서버 프로젝트\RealtimeSocialVille\SngServer\bin\Debug\SngCommon.dll
+C:\Users\Jenifer Sung\Desktop\서버 프로젝트\RealtimeSocialVille\SngServer\bin\Debug\UnityEngine.dll
+C:\Users\Jenifer Sung\Desktop\서버 프로젝트\RealtimeSocialVille\SngServer\bin\Debug\ProudDotNetClient.pdb
+C:\Users\Jenifer Sung\Desktop\서버 프로젝트\RealtimeSocialVille\SngServer\bin\Debug\ProudDotNetServer.pdb
+C:\Users\Jenifer Sung\Desktop\서버 프로젝트\RealtimeSocialVille\SngServer\bin\Debug\UnityEngine.xml
+C:\Users\Jenifer Sung\Desktop\서버 프로젝트\RealtimeSocialVille\SngServer\obj\Debug\SngServer.exe
+C:\Users\Jenifer Sung\Desktop\서버 프로젝트\RealtimeSocialVille\SngServer\obj\Debug\SngServer.pdb
+C:\Users\Jenifer Sung\Desktop\서버 프로젝트\RealtimeSocialVille\SngServer\bin\Debug\SngCommon.pdb
