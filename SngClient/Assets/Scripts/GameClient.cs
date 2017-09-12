@@ -23,7 +23,7 @@ public partial class GameClient : MonoBehaviour {
     // for P2P communication
     SocialGameC2C.Proxy m_C2CProxy = new SocialGameC2C.Proxy();
     SocialGameC2C.Stub m_C2CStub = new SocialGameC2C.Stub();
-
+    
     enum State
     {
         InLobby,
@@ -38,6 +38,8 @@ public partial class GameClient : MonoBehaviour {
 
     void Start()
     {
+        SetWaitingRoom();
+
         m_S2CStub.ReplyLogon = (Nettention.Proud.HostID remote, Nettention.Proud.RmiContext rmiContext, int groupID, int result, string comment) =>
         {
             m_myP2PGroupID = (HostID)groupID;
@@ -45,6 +47,7 @@ public partial class GameClient : MonoBehaviour {
             if(result == 0 && m_state == State.LoggingOn) // ok
             {
                 m_state = State.StandBy;
+                waitingRoom.SetActive(true);
             }
             else
             {
@@ -55,6 +58,7 @@ public partial class GameClient : MonoBehaviour {
         };
 
         Start_InVilleRmiStub();
+        Start_InWaitingRmiStub();
     }
     
 
@@ -111,7 +115,8 @@ public partial class GameClient : MonoBehaviour {
             }
         }
     }
-
+    
+    
 
     private void IssueConnect()
     {
@@ -150,7 +155,7 @@ public partial class GameClient : MonoBehaviour {
         //fill parameters and go
         NetConnectionParam cp = new NetConnectionParam();
         cp.serverIP = m_serverAddr;
-        cp.clientAddrAtServer = "192.168.219.106";
+        cp.clientAddrAtServer = "192.168.219.103";
         cp.serverPort = 15001;
         cp.protocolVersion = new Nettention.Proud.Guid("{0x612df376,0x37a9,0x49d5,{0x8e,0xc0,0x8f,0x41,0xb8,0x4f,0x11,0x56}}");
 

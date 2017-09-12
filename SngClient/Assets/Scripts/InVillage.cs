@@ -12,8 +12,6 @@ partial class GameClient : MonoBehaviour
     // scribble point. this is used for P2P communication for instant real-time scribble.
     public GameObject m_scribblePrefab;
 
-
-
     enum FingerMode { Tree, Scribble };
     FingerMode m_fingerMode = FingerMode.Tree;
 
@@ -68,10 +66,8 @@ partial class GameClient : MonoBehaviour
                 Instantiate(m_scribblePrefab, hit.point, Quaternion.identity);
             }
         }
-
-
-
     }
+
     private void OnGUI_InVille()
     {
         GUI.Label(new Rect(10, 10, 500, 70), "In Ville. You can plant or remove trees by touching terrain. You can also ~");
@@ -85,8 +81,10 @@ partial class GameClient : MonoBehaviour
         }
     }
 
+    
     void Start_InVilleRmiStub()
     {
+
         m_S2CStub.NotifyAddTree = (Nettention.Proud.HostID remote, Nettention.Proud.RmiContext rmiContext, int groupID, int treeID, UnityEngine.Vector3 position) =>
         {
             if((int)m_myP2PGroupID == groupID)

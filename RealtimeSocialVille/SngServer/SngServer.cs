@@ -25,9 +25,7 @@ namespace SngServer
         private ConcurrentDictionary<String, Ville_S> m_villes = new ConcurrentDictionary<string, Ville_S>();
         // guides which client is in which ville.
         private ConcurrentDictionary<HostID, Ville_S> m_remoteClients = new ConcurrentDictionary<HostID, Ville_S>();
-
-
-
+        
         public SngServer()
         {
             m_runLoop = true;
@@ -67,6 +65,9 @@ namespace SngServer
 
                         ville.m_players.TryRemove(clientInfo.hostID, out clientValue);
                         m_remoteClients.TryRemove(clientInfo.hostID, out villeValue);
+                        
+                        //방장 바꾸기, 칸바꾸기
+                        ville.UpdateNextLoc(clientValue.waitingIdx);
 
                         if (ville.m_players.Count == 0)
                         {
@@ -141,8 +142,18 @@ namespace SngServer
                         m_villes.TryAdd(villeName, ville);
                         ville.m_name = villeName;
                     }
-                    m_S2CProxy.ReplyLogon(remote, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, 0, "");
-                    MoveRemoteClientToLoadedVille(remote, ville, nickName);
+                    
+                    m_villes.TryGetValue(villeName, out ville);
+                    if (ville.canJoin == false)
+                    {
+                        // can't join
+                        m_S2CProxy.ReplyLogon(remote, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, 1, "빈자리가 없습니다.");
+                    }
+                    else
+                    {
+                        m_S2CProxy.ReplyLogon(remote, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, 0, "");
+                        MoveRemoteClientToLoadedVille(remote, ville, nickName);
+                    }
                     
                     Monitor.Exit(this);
                     return true;
@@ -213,8 +224,8 @@ namespace SngServer
             sp.protocolVersion = new Nettention.Proud.Guid(SngCommon.Vars.g_sngProtocolVersion);
             sp.tcpPorts = new IntArray();
             sp.tcpPorts.Add(SngCommon.Vars.g_serverPort);   // must be same to the port number at client
-            sp.serverAddrAtClient = "192.168.219.106";
-            sp.localNicAddr = "192.168.219.106";
+            sp.serverAddrAtClient = "192.168.219.103";
+            sp.localNicAddr = "192.168.219.103";
             sp.SetExternalNetWorkerThreadPool(netWorkerThreadPool);
             sp.SetExternalUserWorkerThreadPool(userWorkerThreadPool);
 
@@ -229,7 +240,8 @@ namespace SngServer
 
             if(!ville.m_players.TryGetValue(remote, out remoteClientValue) && !m_remoteClients.TryGetValue(remote, out villeValue)) 
             {
-                ville.m_players.TryAdd(remote, new RemoteClient_S(nickName));
+                ville.m_players.TryAdd(remote, new RemoteClient_S(nickName, ville.nextLocation));
+                ville.UpdateNextLoc(ville.nextLocation);
                 m_remoteClients.TryAdd(remote, ville);
             }
 
@@ -245,6 +257,23 @@ namespace SngServer
             {
                 m_S2CProxy.NotifyAddTree(remote, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, iWO.Value.m_id, iWO.Value.m_position);
             }
+
+            Console.WriteLine("<Update Client List>");
+            // notify current players list to new user
+
+            foreach (KeyValuePair<HostID, RemoteClient_S> iPlayer in ville.m_players)
+            {
+                Console.WriteLine("{0}", iPlayer.Value.nickName);
+                m_S2CProxy.NotifyEnterPlayer(remote, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, iPlayer.Value.nickName, iPlayer.Value.waitingIdx);
+            }
+
+            // except remote, notfy a new Player enters
+            foreach (KeyValuePair<HostID, RemoteClient_S> iPlayer in ville.m_players)
+            {
+                if (iPlayer.Key == remote) continue;
+                m_S2CProxy.NotifyEnterPlayer(iPlayer.Key, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, remoteClientValue.nickName, remoteClientValue.waitingIdx);
+            }
+
         }
 
         private void UnloadVille(Ville_S ville)

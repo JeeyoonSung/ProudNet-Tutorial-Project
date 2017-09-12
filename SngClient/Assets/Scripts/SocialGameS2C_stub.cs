@@ -31,6 +31,11 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
 		{ 
 			return false;
 		};
+		public delegate bool NotifyEnterPlayerDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, String nick, int idx);  
+		public NotifyEnterPlayerDelegate NotifyEnterPlayer = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, String nick, int idx)
+		{ 
+			return false;
+		};
 	public override bool ProcessReceivedMessage(Nettention.Proud.ReceivedMessage pa, Object hostTag) 
 	{
 		Nettention.Proud.HostID remote=pa.RemoteHostID;
@@ -55,6 +60,9 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
             break;
         case Common.NotifyRemoveTree:
             ProcessReceivedMessage_NotifyRemoveTree(__msg, pa, hostTag, remote);
+            break;
+        case Common.NotifyEnterPlayer:
+            ProcessReceivedMessage_NotifyEnterPlayer(__msg, pa, hostTag, remote);
             break;
 		default:
 			 goto __fail;
@@ -226,12 +234,67 @@ parameterString+=treeID.ToString()+",";
         AfterRmiInvocation(summary);
         }
     }
+    void ProcessReceivedMessage_NotifyEnterPlayer(Nettention.Proud.Message __msg, Nettention.Proud.ReceivedMessage pa, Object hostTag, Nettention.Proud.HostID remote)
+    {
+        Nettention.Proud.RmiContext ctx = new Nettention.Proud.RmiContext();
+        ctx.sentFrom=pa.RemoteHostID;
+        ctx.relayed=pa.IsRelayed;
+        ctx.hostTag=hostTag;
+        ctx.encryptMode = pa.EncryptMode;
+        ctx.compressMode = pa.CompressMode;
+
+        int groupID; SngClient.Marshaler.Read(__msg,out groupID);	
+String nick; SngClient.Marshaler.Read(__msg,out nick);	
+int idx; SngClient.Marshaler.Read(__msg,out idx);	
+core.PostCheckReadMessage(__msg, RmiName_NotifyEnterPlayer);
+        if(enableNotifyCallFromStub==true)
+        {
+        string parameterString = "";
+        parameterString+=groupID.ToString()+",";
+parameterString+=nick.ToString()+",";
+parameterString+=idx.ToString()+",";
+        NotifyCallFromStub(Common.NotifyEnterPlayer, RmiName_NotifyEnterPlayer,parameterString);
+        }
+
+        if(enableStubProfiling)
+        {
+        Nettention.Proud.BeforeRmiSummary summary = new Nettention.Proud.BeforeRmiSummary();
+        summary.rmiID = Common.NotifyEnterPlayer;
+        summary.rmiName = RmiName_NotifyEnterPlayer;
+        summary.hostID = remote;
+        summary.hostTag = hostTag;
+        BeforeRmiInvocation(summary);
+        }
+
+        long t0 = Nettention.Proud.PreciseCurrentTime.GetTimeMs();
+
+        // Call this method.
+        bool __ret =NotifyEnterPlayer (remote,ctx , groupID, nick, idx );
+
+        if(__ret==false)
+        {
+        // Error: RMI function that a user did not create has been called. 
+        core.ShowNotImplementedRmiWarning(RmiName_NotifyEnterPlayer);
+        }
+
+        if(enableStubProfiling)
+        {
+        Nettention.Proud.AfterRmiSummary summary = new Nettention.Proud.AfterRmiSummary();
+        summary.rmiID = Common.NotifyEnterPlayer;
+        summary.rmiName = RmiName_NotifyEnterPlayer;
+        summary.hostID = remote;
+        summary.hostTag = hostTag;
+        summary.elapsedTime = Nettention.Proud.PreciseCurrentTime.GetTimeMs()-t0;
+        AfterRmiInvocation(summary);
+        }
+    }
 #if USE_RMI_NAME_STRING
 // RMI name declaration.
 // It is the unique pointer that indicates RMI name such as RMI profiler.
 public const string RmiName_ReplyLogon="ReplyLogon";
 public const string RmiName_NotifyAddTree="NotifyAddTree";
 public const string RmiName_NotifyRemoveTree="NotifyRemoveTree";
+public const string RmiName_NotifyEnterPlayer="NotifyEnterPlayer";
        
 public const string RmiName_First = RmiName_ReplyLogon;
 #else
@@ -240,6 +303,7 @@ public const string RmiName_First = RmiName_ReplyLogon;
 public const string RmiName_ReplyLogon="";
 public const string RmiName_NotifyAddTree="";
 public const string RmiName_NotifyRemoveTree="";
+public const string RmiName_NotifyEnterPlayer="";
        
 public const string RmiName_First = "";
 #endif

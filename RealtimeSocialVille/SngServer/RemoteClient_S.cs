@@ -9,9 +9,11 @@ namespace SngServer
     public class RemoteClient_S
     {
         public string nickName;
-        public RemoteClient_S(string nick)
+        public int waitingIdx;
+        public RemoteClient_S(string nick, int idx)
         {
             nickName = nick;
+            waitingIdx = idx;
         }
 
 
