@@ -23,7 +23,7 @@ partial class GameClient : MonoBehaviour
         int offset_x = 20;
         int offset_y = 20;
         float pos_x, pos_y;
-        float pos_z = 50.0f;
+        float pos_z = 0.0f;
         for (int i = 0; i < playerNum; i++)
         {
             pos_x = -(playerNum / 2 - 1) * offset_x / 2 + offset_x * (i % (playerNum / 2));

@@ -36,6 +36,11 @@ public partial class GameClient : MonoBehaviour {
 
     private State m_state = State.InLobby;
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+    }
+
     void Start()
     {
         SetWaitingRoom();
@@ -84,7 +89,7 @@ public partial class GameClient : MonoBehaviour {
                 OnGUI_Logon();
                 break;
             case State.StandBy:
-                OnGUI_InVille();
+                //OnGUI_InVille();
                 break;
             case State.Failed:
                 GUI.Label(new Rect(10, 30, 200, 80), m_failMessage);
