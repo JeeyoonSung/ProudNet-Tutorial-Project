@@ -101,11 +101,11 @@ SngClient.Marshaler.Write(__msg, treeID);
 	return RmiSend(remotes,rmiContext,__msg,
 		RmiName_NotifyRemoveTree, Common.NotifyRemoveTree);
 }
-public bool NotifyEnterPlayer(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, String nick, int idx)
+public bool NotifyPlayerJoin(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, String nick, int idx)
 {
 	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
 		__msg.SimplePacketMode = core.IsSimplePacketMode();
-		Nettention.Proud.RmiID __msgid= Common.NotifyEnterPlayer;
+		Nettention.Proud.RmiID __msgid= Common.NotifyPlayerJoin;
 		__msg.Write(__msgid);
 		SngClient.Marshaler.Write(__msg, groupID);
 		SngClient.Marshaler.Write(__msg, nick);
@@ -115,21 +115,21 @@ public bool NotifyEnterPlayer(Nettention.Proud.HostID remote,Nettention.Proud.Rm
 	__list[0] = remote;
 		
 	return RmiSend(__list,rmiContext,__msg,
-		RmiName_NotifyEnterPlayer, Common.NotifyEnterPlayer);
+		RmiName_NotifyPlayerJoin, Common.NotifyPlayerJoin);
 }
 
-public bool NotifyEnterPlayer(Nettention.Proud.HostID[] remotes,Nettention.Proud.RmiContext rmiContext, int groupID, String nick, int idx)
+public bool NotifyPlayerJoin(Nettention.Proud.HostID[] remotes,Nettention.Proud.RmiContext rmiContext, int groupID, String nick, int idx)
 {
 	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
 __msg.SimplePacketMode = core.IsSimplePacketMode();
-Nettention.Proud.RmiID __msgid= Common.NotifyEnterPlayer;
+Nettention.Proud.RmiID __msgid= Common.NotifyPlayerJoin;
 __msg.Write(__msgid);
 SngClient.Marshaler.Write(__msg, groupID);
 SngClient.Marshaler.Write(__msg, nick);
 SngClient.Marshaler.Write(__msg, idx);
 		
 	return RmiSend(remotes,rmiContext,__msg,
-		RmiName_NotifyEnterPlayer, Common.NotifyEnterPlayer);
+		RmiName_NotifyPlayerJoin, Common.NotifyPlayerJoin);
 }
 #if USE_RMI_NAME_STRING
 // RMI name declaration.
@@ -137,7 +137,7 @@ SngClient.Marshaler.Write(__msg, idx);
 public const string RmiName_ReplyLogon="ReplyLogon";
 public const string RmiName_NotifyAddTree="NotifyAddTree";
 public const string RmiName_NotifyRemoveTree="NotifyRemoveTree";
-public const string RmiName_NotifyEnterPlayer="NotifyEnterPlayer";
+public const string RmiName_NotifyPlayerJoin="NotifyPlayerJoin";
        
 public const string RmiName_First = RmiName_ReplyLogon;
 #else
@@ -146,7 +146,7 @@ public const string RmiName_First = RmiName_ReplyLogon;
 public const string RmiName_ReplyLogon="";
 public const string RmiName_NotifyAddTree="";
 public const string RmiName_NotifyRemoveTree="";
-public const string RmiName_NotifyEnterPlayer="";
+public const string RmiName_NotifyPlayerJoin="";
        
 public const string RmiName_First = "";
 #endif

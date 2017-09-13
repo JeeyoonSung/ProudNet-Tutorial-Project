@@ -264,14 +264,14 @@ namespace SngServer
             foreach (KeyValuePair<HostID, RemoteClient_S> iPlayer in ville.m_players)
             {
                 Console.WriteLine("{0}", iPlayer.Value.nickName);
-                m_S2CProxy.NotifyEnterPlayer(remote, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, iPlayer.Value.nickName, iPlayer.Value.waitingIdx);
+                m_S2CProxy.NotifyPlayerJoin(remote, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, iPlayer.Value.nickName, iPlayer.Value.waitingIdx);
             }
 
             // except remote, notfy a new Player enters
             foreach (KeyValuePair<HostID, RemoteClient_S> iPlayer in ville.m_players)
             {
                 if (iPlayer.Key == remote) continue;
-                m_S2CProxy.NotifyEnterPlayer(iPlayer.Key, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, remoteClientValue.nickName, remoteClientValue.waitingIdx);
+                m_S2CProxy.NotifyPlayerJoin(iPlayer.Key, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, remoteClientValue.nickName, remoteClientValue.waitingIdx);
             }
 
         }

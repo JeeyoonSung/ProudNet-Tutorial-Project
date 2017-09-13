@@ -31,8 +31,8 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
 		{ 
 			return false;
 		};
-		public delegate bool NotifyEnterPlayerDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, String nick, int idx);  
-		public NotifyEnterPlayerDelegate NotifyEnterPlayer = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, String nick, int idx)
+		public delegate bool NotifyPlayerJoinDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, String nick, int idx);  
+		public NotifyPlayerJoinDelegate NotifyPlayerJoin = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, String nick, int idx)
 		{ 
 			return false;
 		};
@@ -61,8 +61,8 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
         case Common.NotifyRemoveTree:
             ProcessReceivedMessage_NotifyRemoveTree(__msg, pa, hostTag, remote);
             break;
-        case Common.NotifyEnterPlayer:
-            ProcessReceivedMessage_NotifyEnterPlayer(__msg, pa, hostTag, remote);
+        case Common.NotifyPlayerJoin:
+            ProcessReceivedMessage_NotifyPlayerJoin(__msg, pa, hostTag, remote);
             break;
 		default:
 			 goto __fail;
@@ -234,7 +234,7 @@ parameterString+=treeID.ToString()+",";
         AfterRmiInvocation(summary);
         }
     }
-    void ProcessReceivedMessage_NotifyEnterPlayer(Nettention.Proud.Message __msg, Nettention.Proud.ReceivedMessage pa, Object hostTag, Nettention.Proud.HostID remote)
+    void ProcessReceivedMessage_NotifyPlayerJoin(Nettention.Proud.Message __msg, Nettention.Proud.ReceivedMessage pa, Object hostTag, Nettention.Proud.HostID remote)
     {
         Nettention.Proud.RmiContext ctx = new Nettention.Proud.RmiContext();
         ctx.sentFrom=pa.RemoteHostID;
@@ -246,21 +246,21 @@ parameterString+=treeID.ToString()+",";
         int groupID; SngClient.Marshaler.Read(__msg,out groupID);	
 String nick; SngClient.Marshaler.Read(__msg,out nick);	
 int idx; SngClient.Marshaler.Read(__msg,out idx);	
-core.PostCheckReadMessage(__msg, RmiName_NotifyEnterPlayer);
+core.PostCheckReadMessage(__msg, RmiName_NotifyPlayerJoin);
         if(enableNotifyCallFromStub==true)
         {
         string parameterString = "";
         parameterString+=groupID.ToString()+",";
 parameterString+=nick.ToString()+",";
 parameterString+=idx.ToString()+",";
-        NotifyCallFromStub(Common.NotifyEnterPlayer, RmiName_NotifyEnterPlayer,parameterString);
+        NotifyCallFromStub(Common.NotifyPlayerJoin, RmiName_NotifyPlayerJoin,parameterString);
         }
 
         if(enableStubProfiling)
         {
         Nettention.Proud.BeforeRmiSummary summary = new Nettention.Proud.BeforeRmiSummary();
-        summary.rmiID = Common.NotifyEnterPlayer;
-        summary.rmiName = RmiName_NotifyEnterPlayer;
+        summary.rmiID = Common.NotifyPlayerJoin;
+        summary.rmiName = RmiName_NotifyPlayerJoin;
         summary.hostID = remote;
         summary.hostTag = hostTag;
         BeforeRmiInvocation(summary);
@@ -269,19 +269,19 @@ parameterString+=idx.ToString()+",";
         long t0 = Nettention.Proud.PreciseCurrentTime.GetTimeMs();
 
         // Call this method.
-        bool __ret =NotifyEnterPlayer (remote,ctx , groupID, nick, idx );
+        bool __ret =NotifyPlayerJoin (remote,ctx , groupID, nick, idx );
 
         if(__ret==false)
         {
         // Error: RMI function that a user did not create has been called. 
-        core.ShowNotImplementedRmiWarning(RmiName_NotifyEnterPlayer);
+        core.ShowNotImplementedRmiWarning(RmiName_NotifyPlayerJoin);
         }
 
         if(enableStubProfiling)
         {
         Nettention.Proud.AfterRmiSummary summary = new Nettention.Proud.AfterRmiSummary();
-        summary.rmiID = Common.NotifyEnterPlayer;
-        summary.rmiName = RmiName_NotifyEnterPlayer;
+        summary.rmiID = Common.NotifyPlayerJoin;
+        summary.rmiName = RmiName_NotifyPlayerJoin;
         summary.hostID = remote;
         summary.hostTag = hostTag;
         summary.elapsedTime = Nettention.Proud.PreciseCurrentTime.GetTimeMs()-t0;
@@ -294,7 +294,7 @@ parameterString+=idx.ToString()+",";
 public const string RmiName_ReplyLogon="ReplyLogon";
 public const string RmiName_NotifyAddTree="NotifyAddTree";
 public const string RmiName_NotifyRemoveTree="NotifyRemoveTree";
-public const string RmiName_NotifyEnterPlayer="NotifyEnterPlayer";
+public const string RmiName_NotifyPlayerJoin="NotifyPlayerJoin";
        
 public const string RmiName_First = RmiName_ReplyLogon;
 #else
@@ -303,7 +303,7 @@ public const string RmiName_First = RmiName_ReplyLogon;
 public const string RmiName_ReplyLogon="";
 public const string RmiName_NotifyAddTree="";
 public const string RmiName_NotifyRemoveTree="";
-public const string RmiName_NotifyEnterPlayer="";
+public const string RmiName_NotifyPlayerJoin="";
        
 public const string RmiName_First = "";
 #endif

@@ -47,7 +47,7 @@ partial class GameClient : MonoBehaviour
 
     void Start_InWaitingRmiStub()
     {
-        m_S2CStub.NotifyEnterPlayer = (Nettention.Proud.HostID remote, Nettention.Proud.RmiContext rmiContext, int groupID, string nick, int idx) =>
+        m_S2CStub.NotifyPlayerJoin = (Nettention.Proud.HostID remote, Nettention.Proud.RmiContext rmiContext, int groupID, string nick, int idx) =>
         {
             Debug.Log("Call NotifyEnterPlayer " + idx);
             GameObject nickText, markObj;

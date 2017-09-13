@@ -16,13 +16,13 @@ namespace SocialGameS2C
 			public const Nettention.Proud.RmiID ReplyLogon = (Nettention.Proud.RmiID)4000+1;
 			public const Nettention.Proud.RmiID NotifyAddTree = (Nettention.Proud.RmiID)4000+2;
 			public const Nettention.Proud.RmiID NotifyRemoveTree = (Nettention.Proud.RmiID)4000+3;
-			public const Nettention.Proud.RmiID NotifyEnterPlayer = (Nettention.Proud.RmiID)4000+4;
+			public const Nettention.Proud.RmiID NotifyPlayerJoin = (Nettention.Proud.RmiID)4000+4;
 		// List that has RMI ID.
 		public static Nettention.Proud.RmiID[] RmiIDList = new Nettention.Proud.RmiID[] {
 			ReplyLogon,
 			NotifyAddTree,
 			NotifyRemoveTree,
-			NotifyEnterPlayer,
+			NotifyPlayerJoin,
 		};
 	}
 }
