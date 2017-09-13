@@ -16,8 +16,8 @@ namespace SocialGameS2C
 public AfterRmiInvocationDelegate AfterRmiInvocation = delegate(Nettention.Proud.AfterRmiSummary summary) {};
 public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Proud.BeforeRmiSummary summary) {};
 
-		public delegate bool ReplyLogonDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, int result, String comment);  
-		public ReplyLogonDelegate ReplyLogon = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, int result, String comment)
+		public delegate bool ReplyLogonDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, int result, String comment, bool isMaster);  
+		public ReplyLogonDelegate ReplyLogon = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, int result, String comment, bool isMaster)
 		{ 
 			return false;
 		};
@@ -33,6 +33,11 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
 		};
 		public delegate bool NotifyPlayerJoinDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, String nick, int idx);  
 		public NotifyPlayerJoinDelegate NotifyPlayerJoin = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, String nick, int idx)
+		{ 
+			return false;
+		};
+		public delegate bool NotifyPlayerLeaveDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, int idx, bool changeMaster, int newMasterID);  
+		public NotifyPlayerLeaveDelegate NotifyPlayerLeave = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, int idx, bool changeMaster, int newMasterID)
 		{ 
 			return false;
 		};
@@ -64,6 +69,9 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
         case Common.NotifyPlayerJoin:
             ProcessReceivedMessage_NotifyPlayerJoin(__msg, pa, hostTag, remote);
             break;
+        case Common.NotifyPlayerLeave:
+            ProcessReceivedMessage_NotifyPlayerLeave(__msg, pa, hostTag, remote);
+            break;
 		default:
 			 goto __fail;
 		}
@@ -86,6 +94,7 @@ __fail:
         int groupID; SngClient.Marshaler.Read(__msg,out groupID);	
 int result; SngClient.Marshaler.Read(__msg,out result);	
 String comment; SngClient.Marshaler.Read(__msg,out comment);	
+bool isMaster; SngClient.Marshaler.Read(__msg,out isMaster);	
 core.PostCheckReadMessage(__msg, RmiName_ReplyLogon);
         if(enableNotifyCallFromStub==true)
         {
@@ -93,6 +102,7 @@ core.PostCheckReadMessage(__msg, RmiName_ReplyLogon);
         parameterString+=groupID.ToString()+",";
 parameterString+=result.ToString()+",";
 parameterString+=comment.ToString()+",";
+parameterString+=isMaster.ToString()+",";
         NotifyCallFromStub(Common.ReplyLogon, RmiName_ReplyLogon,parameterString);
         }
 
@@ -109,7 +119,7 @@ parameterString+=comment.ToString()+",";
         long t0 = Nettention.Proud.PreciseCurrentTime.GetTimeMs();
 
         // Call this method.
-        bool __ret =ReplyLogon (remote,ctx , groupID, result, comment );
+        bool __ret =ReplyLogon (remote,ctx , groupID, result, comment, isMaster );
 
         if(__ret==false)
         {
@@ -288,6 +298,62 @@ parameterString+=idx.ToString()+",";
         AfterRmiInvocation(summary);
         }
     }
+    void ProcessReceivedMessage_NotifyPlayerLeave(Nettention.Proud.Message __msg, Nettention.Proud.ReceivedMessage pa, Object hostTag, Nettention.Proud.HostID remote)
+    {
+        Nettention.Proud.RmiContext ctx = new Nettention.Proud.RmiContext();
+        ctx.sentFrom=pa.RemoteHostID;
+        ctx.relayed=pa.IsRelayed;
+        ctx.hostTag=hostTag;
+        ctx.encryptMode = pa.EncryptMode;
+        ctx.compressMode = pa.CompressMode;
+
+        int groupID; SngClient.Marshaler.Read(__msg,out groupID);	
+int idx; SngClient.Marshaler.Read(__msg,out idx);	
+bool changeMaster; SngClient.Marshaler.Read(__msg,out changeMaster);	
+int newMasterID; SngClient.Marshaler.Read(__msg,out newMasterID);	
+core.PostCheckReadMessage(__msg, RmiName_NotifyPlayerLeave);
+        if(enableNotifyCallFromStub==true)
+        {
+        string parameterString = "";
+        parameterString+=groupID.ToString()+",";
+parameterString+=idx.ToString()+",";
+parameterString+=changeMaster.ToString()+",";
+parameterString+=newMasterID.ToString()+",";
+        NotifyCallFromStub(Common.NotifyPlayerLeave, RmiName_NotifyPlayerLeave,parameterString);
+        }
+
+        if(enableStubProfiling)
+        {
+        Nettention.Proud.BeforeRmiSummary summary = new Nettention.Proud.BeforeRmiSummary();
+        summary.rmiID = Common.NotifyPlayerLeave;
+        summary.rmiName = RmiName_NotifyPlayerLeave;
+        summary.hostID = remote;
+        summary.hostTag = hostTag;
+        BeforeRmiInvocation(summary);
+        }
+
+        long t0 = Nettention.Proud.PreciseCurrentTime.GetTimeMs();
+
+        // Call this method.
+        bool __ret =NotifyPlayerLeave (remote,ctx , groupID, idx, changeMaster, newMasterID );
+
+        if(__ret==false)
+        {
+        // Error: RMI function that a user did not create has been called. 
+        core.ShowNotImplementedRmiWarning(RmiName_NotifyPlayerLeave);
+        }
+
+        if(enableStubProfiling)
+        {
+        Nettention.Proud.AfterRmiSummary summary = new Nettention.Proud.AfterRmiSummary();
+        summary.rmiID = Common.NotifyPlayerLeave;
+        summary.rmiName = RmiName_NotifyPlayerLeave;
+        summary.hostID = remote;
+        summary.hostTag = hostTag;
+        summary.elapsedTime = Nettention.Proud.PreciseCurrentTime.GetTimeMs()-t0;
+        AfterRmiInvocation(summary);
+        }
+    }
 #if USE_RMI_NAME_STRING
 // RMI name declaration.
 // It is the unique pointer that indicates RMI name such as RMI profiler.
@@ -295,6 +361,7 @@ public const string RmiName_ReplyLogon="ReplyLogon";
 public const string RmiName_NotifyAddTree="NotifyAddTree";
 public const string RmiName_NotifyRemoveTree="NotifyRemoveTree";
 public const string RmiName_NotifyPlayerJoin="NotifyPlayerJoin";
+public const string RmiName_NotifyPlayerLeave="NotifyPlayerLeave";
        
 public const string RmiName_First = RmiName_ReplyLogon;
 #else
@@ -304,6 +371,7 @@ public const string RmiName_ReplyLogon="";
 public const string RmiName_NotifyAddTree="";
 public const string RmiName_NotifyRemoveTree="";
 public const string RmiName_NotifyPlayerJoin="";
+public const string RmiName_NotifyPlayerLeave="";
        
 public const string RmiName_First = "";
 #endif

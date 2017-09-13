@@ -40,7 +40,7 @@ public partial class GameClient : MonoBehaviour {
     {
         SetWaitingRoom();
 
-        m_S2CStub.ReplyLogon = (Nettention.Proud.HostID remote, Nettention.Proud.RmiContext rmiContext, int groupID, int result, string comment) =>
+        m_S2CStub.ReplyLogon = (Nettention.Proud.HostID remote, Nettention.Proud.RmiContext rmiContext, int groupID, int result, string comment, bool isMaster) =>
         {
             m_myP2PGroupID = (HostID)groupID;
 
@@ -48,6 +48,7 @@ public partial class GameClient : MonoBehaviour {
             {
                 m_state = State.StandBy;
                 waitingRoom.SetActive(true);
+                this.isMaster = isMaster;
             }
             else
             {

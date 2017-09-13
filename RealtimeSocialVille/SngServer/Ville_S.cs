@@ -14,6 +14,7 @@ namespace SngServer
         {
             m_nextNewID = 1;
             m_p2pGroupID = HostID.HostID_None;
+            masterID = HostID.HostID_None;
             nextLocation = 0;
             canJoin = true;
             for (int i = 0; i < waitingArr.Length; i++)
@@ -29,6 +30,9 @@ namespace SngServer
 
         // is available to join this room
         public bool canJoin;
+
+        // who is room master
+        public HostID masterID;
 
         // ville name
         public String m_name;

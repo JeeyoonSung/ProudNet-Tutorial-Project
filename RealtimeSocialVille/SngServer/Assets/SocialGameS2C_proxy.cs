@@ -13,7 +13,7 @@ namespace SocialGameS2C
 {
 	internal class Proxy:Nettention.Proud.RmiProxy
 	{
-public bool ReplyLogon(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, int result, String comment)
+public bool ReplyLogon(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, int result, String comment, bool isMaster)
 {
 	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
 		__msg.SimplePacketMode = core.IsSimplePacketMode();
@@ -22,6 +22,7 @@ public bool ReplyLogon(Nettention.Proud.HostID remote,Nettention.Proud.RmiContex
 		SngClient.Marshaler.Write(__msg, groupID);
 		SngClient.Marshaler.Write(__msg, result);
 		SngClient.Marshaler.Write(__msg, comment);
+		SngClient.Marshaler.Write(__msg, isMaster);
 		
 	Nettention.Proud.HostID[] __list = new Nettention.Proud.HostID[1];
 	__list[0] = remote;
@@ -30,7 +31,7 @@ public bool ReplyLogon(Nettention.Proud.HostID remote,Nettention.Proud.RmiContex
 		RmiName_ReplyLogon, Common.ReplyLogon);
 }
 
-public bool ReplyLogon(Nettention.Proud.HostID[] remotes,Nettention.Proud.RmiContext rmiContext, int groupID, int result, String comment)
+public bool ReplyLogon(Nettention.Proud.HostID[] remotes,Nettention.Proud.RmiContext rmiContext, int groupID, int result, String comment, bool isMaster)
 {
 	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
 __msg.SimplePacketMode = core.IsSimplePacketMode();
@@ -39,6 +40,7 @@ __msg.Write(__msgid);
 SngClient.Marshaler.Write(__msg, groupID);
 SngClient.Marshaler.Write(__msg, result);
 SngClient.Marshaler.Write(__msg, comment);
+SngClient.Marshaler.Write(__msg, isMaster);
 		
 	return RmiSend(remotes,rmiContext,__msg,
 		RmiName_ReplyLogon, Common.ReplyLogon);
@@ -131,6 +133,38 @@ SngClient.Marshaler.Write(__msg, idx);
 	return RmiSend(remotes,rmiContext,__msg,
 		RmiName_NotifyPlayerJoin, Common.NotifyPlayerJoin);
 }
+public bool NotifyPlayerLeave(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, int idx, bool changeMaster, int newMasterID)
+{
+	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
+		__msg.SimplePacketMode = core.IsSimplePacketMode();
+		Nettention.Proud.RmiID __msgid= Common.NotifyPlayerLeave;
+		__msg.Write(__msgid);
+		SngClient.Marshaler.Write(__msg, groupID);
+		SngClient.Marshaler.Write(__msg, idx);
+		SngClient.Marshaler.Write(__msg, changeMaster);
+		SngClient.Marshaler.Write(__msg, newMasterID);
+		
+	Nettention.Proud.HostID[] __list = new Nettention.Proud.HostID[1];
+	__list[0] = remote;
+		
+	return RmiSend(__list,rmiContext,__msg,
+		RmiName_NotifyPlayerLeave, Common.NotifyPlayerLeave);
+}
+
+public bool NotifyPlayerLeave(Nettention.Proud.HostID[] remotes,Nettention.Proud.RmiContext rmiContext, int groupID, int idx, bool changeMaster, int newMasterID)
+{
+	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
+__msg.SimplePacketMode = core.IsSimplePacketMode();
+Nettention.Proud.RmiID __msgid= Common.NotifyPlayerLeave;
+__msg.Write(__msgid);
+SngClient.Marshaler.Write(__msg, groupID);
+SngClient.Marshaler.Write(__msg, idx);
+SngClient.Marshaler.Write(__msg, changeMaster);
+SngClient.Marshaler.Write(__msg, newMasterID);
+		
+	return RmiSend(remotes,rmiContext,__msg,
+		RmiName_NotifyPlayerLeave, Common.NotifyPlayerLeave);
+}
 #if USE_RMI_NAME_STRING
 // RMI name declaration.
 // It is the unique pointer that indicates RMI name such as RMI profiler.
@@ -138,6 +172,7 @@ public const string RmiName_ReplyLogon="ReplyLogon";
 public const string RmiName_NotifyAddTree="NotifyAddTree";
 public const string RmiName_NotifyRemoveTree="NotifyRemoveTree";
 public const string RmiName_NotifyPlayerJoin="NotifyPlayerJoin";
+public const string RmiName_NotifyPlayerLeave="NotifyPlayerLeave";
        
 public const string RmiName_First = RmiName_ReplyLogon;
 #else
@@ -147,6 +182,7 @@ public const string RmiName_ReplyLogon="";
 public const string RmiName_NotifyAddTree="";
 public const string RmiName_NotifyRemoveTree="";
 public const string RmiName_NotifyPlayerJoin="";
+public const string RmiName_NotifyPlayerLeave="";
        
 public const string RmiName_First = "";
 #endif

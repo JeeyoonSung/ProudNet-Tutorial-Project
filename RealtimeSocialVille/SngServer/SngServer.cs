@@ -62,6 +62,8 @@ namespace SngServer
                     {
                         RemoteClient_S clientValue;
                         Ville_S villeValue;
+                        bool changeMaster;
+                        int changedMasterValue;
 
                         ville.m_players.TryRemove(clientInfo.hostID, out clientValue);
                         m_remoteClients.TryRemove(clientInfo.hostID, out villeValue);
@@ -69,9 +71,29 @@ namespace SngServer
                         //방장 바꾸기, 칸바꾸기
                         ville.UpdateNextLoc(clientValue.waitingIdx);
 
+                        changeMaster = false;
+                        changedMasterValue = -1;
+                        
+                        if (clientInfo.hostID == ville.masterID && ville.m_players != null)    // master leaved
+                        {
+                            changeMaster = true;
+                            if(ville.m_players.Count != 0)
+                                ville.masterID = ville.m_players.Keys.First();
+                            changedMasterValue = (int)ville.masterID;
+                            Console.WriteLine("masterID changed: {0}->{1}", clientInfo.hostID, changedMasterValue);
+                        }
+                        
                         if (ville.m_players.Count == 0)
                         {
                             UnloadVille(ville);
+                        }
+                        else
+                        {
+                            // notify to all player
+                            foreach (KeyValuePair<HostID, RemoteClient_S> iPlayer in ville.m_players)
+                            {
+                                m_S2CProxy.NotifyPlayerLeave(iPlayer.Key, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, clientValue.waitingIdx, changeMaster, changedMasterValue);
+                            }
                         }
                     }
                     Monitor.Exit(this);
@@ -132,6 +154,7 @@ namespace SngServer
                         // create new one
                         ville = new Ville_S();
                         ville.m_p2pGroupID = m_netServer.CreateP2PGroup(list, new ByteArray());
+                        ville.masterID = remote;
 
                         Console.WriteLine("m_p2pGroupID : {0}", ville.m_p2pGroupID);
 
@@ -147,11 +170,11 @@ namespace SngServer
                     if (ville.canJoin == false)
                     {
                         // can't join
-                        m_S2CProxy.ReplyLogon(remote, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, 1, "빈자리가 없습니다.");
+                        m_S2CProxy.ReplyLogon(remote, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, 1, "빈자리가 없습니다.",false);
                     }
                     else
                     {
-                        m_S2CProxy.ReplyLogon(remote, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, 0, "");
+                        m_S2CProxy.ReplyLogon(remote, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, 0, "", (remote == ville.masterID));
                         MoveRemoteClientToLoadedVille(remote, ville, nickName);
                     }
                     
@@ -257,7 +280,7 @@ namespace SngServer
             {
                 m_S2CProxy.NotifyAddTree(remote, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, iWO.Value.m_id, iWO.Value.m_position);
             }
-
+            Console.WriteLine("masterID: {0}", ville.masterID);
             Console.WriteLine("<Update Client List>");
             // notify current players list to new user
 

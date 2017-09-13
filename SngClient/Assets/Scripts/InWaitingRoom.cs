@@ -15,6 +15,8 @@ partial class GameClient : MonoBehaviour
     public Dictionary<GameObject, bool> isVacant = new Dictionary<GameObject, bool>();
     public Dictionary<int, GameObject> playerNicks = new Dictionary<int, GameObject>();
 
+    public bool isMaster;
+
     private void SetWaitingRoom()
     {
         int playerNum = 8;
@@ -32,7 +34,7 @@ partial class GameClient : MonoBehaviour
             GameObject waitingMark = Instantiate(waitingPlayerPrefab, pos, Quaternion.Euler(0, 180f, 0));
             waitingMark.transform.SetParent(waitingPlayerMarks.transform);
             playerMarks.Add(i, waitingMark);
-            isVacant.Add(waitingMark, false);
+            isVacant.Add(waitingMark, true);
 
             GameObject nickText = Instantiate(nickNameTextPrefab, UnityEngine.Vector3.zero, Quaternion.identity);
             nickText.transform.SetParent(nickNameField.transform);
@@ -49,7 +51,8 @@ partial class GameClient : MonoBehaviour
     {
         m_S2CStub.NotifyPlayerJoin = (Nettention.Proud.HostID remote, Nettention.Proud.RmiContext rmiContext, int groupID, string nick, int idx) =>
         {
-            Debug.Log("Call NotifyEnterPlayer " + idx);
+            Debug.Log("Call NotifyPlayerJoin " + idx);
+
             GameObject nickText, markObj;
             if ((int)m_myP2PGroupID == groupID)
             {
@@ -60,7 +63,31 @@ partial class GameClient : MonoBehaviour
                 playerMarks.TryGetValue(idx, out markObj);
                 markObj.transform.rotation = Quaternion.Euler(UnityEngine.Vector3.zero);
 
+                isVacant[markObj] = false;
+            }
+            return true;
+        };
+
+        m_S2CStub.NotifyPlayerLeave = (Nettention.Proud.HostID remote, Nettention.Proud.RmiContext rmiContext, int groupID, int idx, bool changeMaster, int newMasterID) =>
+        {
+            Debug.Log("Call NotifyPlayerLeave " + idx);
+
+            GameObject nickText, markObj;
+            if ((int)m_myP2PGroupID == groupID)
+            {
+                playerNicks.TryGetValue(idx, out nickText);
+                nickText.SetActive(false);
+
+                playerMarks.TryGetValue(idx, out markObj);
+                markObj.transform.rotation = Quaternion.Euler(UnityEngine.Vector3.up*180);
+
                 isVacant[markObj] = true;
+
+                // appoint new master
+                if(changeMaster && (int)remote == newMasterID)
+                {
+                    isMaster = true;
+                }
             }
             return true;
         };
