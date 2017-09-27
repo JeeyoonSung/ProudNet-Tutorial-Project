@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SngServer", "SngServer\SngServer.csproj", "{1FB9370A-608E-4547-BC19-656F54FD4EEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SngCommon", "SngCommon\SngCommon.csproj", "{0DDEE7C8-6250-42B3-909F-510DFBBBA1FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1FB9370A-608E-4547-BC19-656F54FD4EEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FB9370A-608E-4547-BC19-656F54FD4EEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FB9370A-608E-4547-BC19-656F54FD4EEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FB9370A-608E-4547-BC19-656F54FD4EEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DDEE7C8-6250-42B3-909F-510DFBBBA1FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DDEE7C8-6250-42B3-909F-510DFBBBA1FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DDEE7C8-6250-42B3-909F-510DFBBBA1FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DDEE7C8-6250-42B3-909F-510DFBBBA1FD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

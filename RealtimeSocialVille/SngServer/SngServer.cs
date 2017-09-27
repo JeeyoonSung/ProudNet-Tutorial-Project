@@ -247,8 +247,8 @@ namespace SngServer
             sp.protocolVersion = new Nettention.Proud.Guid(SngCommon.Vars.g_sngProtocolVersion);
             sp.tcpPorts = new IntArray();
             sp.tcpPorts.Add(SngCommon.Vars.g_serverPort);   // must be same to the port number at client
-            sp.serverAddrAtClient = "192.168.219.103";
-            sp.localNicAddr = "192.168.219.103";
+            sp.serverAddrAtClient = "192.168.219.104";
+            sp.localNicAddr = "192.168.219.104";
             sp.SetExternalNetWorkerThreadPool(netWorkerThreadPool);
             sp.SetExternalUserWorkerThreadPool(userWorkerThreadPool);
 

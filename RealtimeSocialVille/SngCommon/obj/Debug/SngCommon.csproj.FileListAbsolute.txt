@@ -8,3 +8,8 @@ C:\Users\Jenifer Sung\Desktop\dev\ProudNet Project\RealtimeSocialVille\SngCommon
 C:\Users\Jenifer Sung\Desktop\dev\ProudNet Project\RealtimeSocialVille\SngCommon\obj\Debug\SngCommon.csprojResolveAssemblyReference.cache
 C:\Users\Jenifer Sung\Desktop\dev\ProudNet Project\RealtimeSocialVille\SngCommon\obj\Debug\SngCommon.dll
 C:\Users\Jenifer Sung\Desktop\dev\ProudNet Project\RealtimeSocialVille\SngCommon\obj\Debug\SngCommon.pdb
+D:\BackUp\dev\ProudNet Project\RealtimeSocialVille\SngCommon\bin\Debug\SngCommon.dll
+D:\BackUp\dev\ProudNet Project\RealtimeSocialVille\SngCommon\bin\Debug\SngCommon.pdb
+D:\BackUp\dev\ProudNet Project\RealtimeSocialVille\SngCommon\obj\Debug\SngCommon.csprojResolveAssemblyReference.cache
+D:\BackUp\dev\ProudNet Project\RealtimeSocialVille\SngCommon\obj\Debug\SngCommon.dll
+D:\BackUp\dev\ProudNet Project\RealtimeSocialVille\SngCommon\obj\Debug\SngCommon.pdb
