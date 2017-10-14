@@ -21,6 +21,11 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
 		{ 
 			return false;
 		};
+		public delegate bool RequestEnterGameDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext);  
+		public RequestEnterGameDelegate RequestEnterGame = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext)
+		{ 
+			return false;
+		};
 		public delegate bool RequestAddTreeDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, UnityEngine.Vector3 position);  
 		public RequestAddTreeDelegate RequestAddTree = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, UnityEngine.Vector3 position)
 		{ 
@@ -49,6 +54,9 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
 		{
         case Common.RequestLogon:
             ProcessReceivedMessage_RequestLogon(__msg, pa, hostTag, remote);
+            break;
+        case Common.RequestEnterGame:
+            ProcessReceivedMessage_RequestEnterGame(__msg, pa, hostTag, remote);
             break;
         case Common.RequestAddTree:
             ProcessReceivedMessage_RequestAddTree(__msg, pa, hostTag, remote);
@@ -114,6 +122,54 @@ parameterString+=isNewVille.ToString()+",";
         Nettention.Proud.AfterRmiSummary summary = new Nettention.Proud.AfterRmiSummary();
         summary.rmiID = Common.RequestLogon;
         summary.rmiName = RmiName_RequestLogon;
+        summary.hostID = remote;
+        summary.hostTag = hostTag;
+        summary.elapsedTime = Nettention.Proud.PreciseCurrentTime.GetTimeMs()-t0;
+        AfterRmiInvocation(summary);
+        }
+    }
+    void ProcessReceivedMessage_RequestEnterGame(Nettention.Proud.Message __msg, Nettention.Proud.ReceivedMessage pa, Object hostTag, Nettention.Proud.HostID remote)
+    {
+        Nettention.Proud.RmiContext ctx = new Nettention.Proud.RmiContext();
+        ctx.sentFrom=pa.RemoteHostID;
+        ctx.relayed=pa.IsRelayed;
+        ctx.hostTag=hostTag;
+        ctx.encryptMode = pa.EncryptMode;
+        ctx.compressMode = pa.CompressMode;
+
+        core.PostCheckReadMessage(__msg, RmiName_RequestEnterGame);
+        if(enableNotifyCallFromStub==true)
+        {
+        string parameterString = "";
+                NotifyCallFromStub(Common.RequestEnterGame, RmiName_RequestEnterGame,parameterString);
+        }
+
+        if(enableStubProfiling)
+        {
+        Nettention.Proud.BeforeRmiSummary summary = new Nettention.Proud.BeforeRmiSummary();
+        summary.rmiID = Common.RequestEnterGame;
+        summary.rmiName = RmiName_RequestEnterGame;
+        summary.hostID = remote;
+        summary.hostTag = hostTag;
+        BeforeRmiInvocation(summary);
+        }
+
+        long t0 = Nettention.Proud.PreciseCurrentTime.GetTimeMs();
+
+        // Call this method.
+        bool __ret =RequestEnterGame (remote,ctx  );
+
+        if(__ret==false)
+        {
+        // Error: RMI function that a user did not create has been called. 
+        core.ShowNotImplementedRmiWarning(RmiName_RequestEnterGame);
+        }
+
+        if(enableStubProfiling)
+        {
+        Nettention.Proud.AfterRmiSummary summary = new Nettention.Proud.AfterRmiSummary();
+        summary.rmiID = Common.RequestEnterGame;
+        summary.rmiName = RmiName_RequestEnterGame;
         summary.hostID = remote;
         summary.hostTag = hostTag;
         summary.elapsedTime = Nettention.Proud.PreciseCurrentTime.GetTimeMs()-t0;
@@ -224,6 +280,7 @@ core.PostCheckReadMessage(__msg, RmiName_RequestRemoveTree);
 // RMI name declaration.
 // It is the unique pointer that indicates RMI name such as RMI profiler.
 public const string RmiName_RequestLogon="RequestLogon";
+public const string RmiName_RequestEnterGame="RequestEnterGame";
 public const string RmiName_RequestAddTree="RequestAddTree";
 public const string RmiName_RequestRemoveTree="RequestRemoveTree";
        
@@ -232,6 +289,7 @@ public const string RmiName_First = RmiName_RequestLogon;
 // RMI name declaration.
 // It is the unique pointer that indicates RMI name such as RMI profiler.
 public const string RmiName_RequestLogon="";
+public const string RmiName_RequestEnterGame="";
 public const string RmiName_RequestAddTree="";
 public const string RmiName_RequestRemoveTree="";
        

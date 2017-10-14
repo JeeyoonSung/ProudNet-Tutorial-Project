@@ -91,6 +91,29 @@ partial class GameClient : MonoBehaviour
             }
             return true;
         };
+
+        m_S2CStub.ReplyEnterGame = (Nettention.Proud.HostID remote, Nettention.Proud.RmiContext rmiContext, int groupID, bool result, int masterID) =>
+        {
+            if ((int)m_myP2PGroupID == groupID)
+            {
+                if(result)
+                {
+                    ScenesManager.StartGame();
+                }
+                else
+                {
+                    Debug.Log("잘못된 권한입니다.");
+                    if((int)remote == masterID)
+                    {
+                        isMaster = true;
+                    } else
+                    {
+                        isMaster = false;
+                    }
+                }
+            }
+            return true;
+        };
     }
 
 }

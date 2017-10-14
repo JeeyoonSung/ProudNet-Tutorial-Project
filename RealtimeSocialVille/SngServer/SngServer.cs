@@ -238,6 +238,37 @@ namespace SngServer
                     Monitor.Exit(this);
                     return true;
                 };
+
+            m_C2SStub.RequestEnterGame = (Nettention.Proud.HostID remote, Nettention.Proud.RmiContext rmiContext) =>
+                {
+                    Monitor.Enter(this);
+                    Ville_S ville;
+
+                    if (m_remoteClients.TryGetValue(remote, out ville))
+                    {
+                        if (remote == ville.masterID)
+                        {
+                            Console.WriteLine("Master request to enter game scene");
+                            
+                            HostID[] list = m_netServer.GetClientHostIDs();
+                            foreach (HostID id in list)
+                            {
+                                m_S2CProxy.ReplyEnterGame(id, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, true, 0);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("who not master request to enter game scene");
+                            HostID[] list = m_netServer.GetClientHostIDs();
+                            foreach (HostID id in list)
+                            {
+                                m_S2CProxy.ReplyEnterGame(id, RmiContext.ReliableSend, (int)ville.m_p2pGroupID, false, (int)ville.masterID);
+                            }
+                        }
+                    }
+                    Monitor.Exit(this);
+                    return true;
+                };
         }
 
         public void Start()
@@ -247,8 +278,8 @@ namespace SngServer
             sp.protocolVersion = new Nettention.Proud.Guid(SngCommon.Vars.g_sngProtocolVersion);
             sp.tcpPorts = new IntArray();
             sp.tcpPorts.Add(SngCommon.Vars.g_serverPort);   // must be same to the port number at client
-            sp.serverAddrAtClient = "192.168.219.104";
-            sp.localNicAddr = "192.168.219.104";
+            sp.serverAddrAtClient = "192.168.219.100";
+            sp.localNicAddr = "192.168.219.100";
             sp.SetExternalNetWorkerThreadPool(netWorkerThreadPool);
             sp.SetExternalUserWorkerThreadPool(userWorkerThreadPool);
 

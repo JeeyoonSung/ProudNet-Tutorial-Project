@@ -43,6 +43,30 @@ SngClient.Marshaler.Write(__msg, isNewVille);
 	return RmiSend(remotes,rmiContext,__msg,
 		RmiName_RequestLogon, Common.RequestLogon);
 }
+public bool RequestEnterGame(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext)
+{
+	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
+		__msg.SimplePacketMode = core.IsSimplePacketMode();
+		Nettention.Proud.RmiID __msgid= Common.RequestEnterGame;
+		__msg.Write(__msgid);
+		
+	Nettention.Proud.HostID[] __list = new Nettention.Proud.HostID[1];
+	__list[0] = remote;
+		
+	return RmiSend(__list,rmiContext,__msg,
+		RmiName_RequestEnterGame, Common.RequestEnterGame);
+}
+
+public bool RequestEnterGame(Nettention.Proud.HostID[] remotes,Nettention.Proud.RmiContext rmiContext)
+{
+	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
+__msg.SimplePacketMode = core.IsSimplePacketMode();
+Nettention.Proud.RmiID __msgid= Common.RequestEnterGame;
+__msg.Write(__msgid);
+		
+	return RmiSend(remotes,rmiContext,__msg,
+		RmiName_RequestEnterGame, Common.RequestEnterGame);
+}
 public bool RequestAddTree(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, UnityEngine.Vector3 position)
 {
 	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
@@ -99,6 +123,7 @@ SngClient.Marshaler.Write(__msg, treeID);
 // RMI name declaration.
 // It is the unique pointer that indicates RMI name such as RMI profiler.
 public const string RmiName_RequestLogon="RequestLogon";
+public const string RmiName_RequestEnterGame="RequestEnterGame";
 public const string RmiName_RequestAddTree="RequestAddTree";
 public const string RmiName_RequestRemoveTree="RequestRemoveTree";
        
@@ -107,6 +132,7 @@ public const string RmiName_First = RmiName_RequestLogon;
 // RMI name declaration.
 // It is the unique pointer that indicates RMI name such as RMI profiler.
 public const string RmiName_RequestLogon="";
+public const string RmiName_RequestEnterGame="";
 public const string RmiName_RequestAddTree="";
 public const string RmiName_RequestRemoveTree="";
        

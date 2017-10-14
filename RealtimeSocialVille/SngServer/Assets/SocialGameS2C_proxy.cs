@@ -45,6 +45,36 @@ SngClient.Marshaler.Write(__msg, isMaster);
 	return RmiSend(remotes,rmiContext,__msg,
 		RmiName_ReplyLogon, Common.ReplyLogon);
 }
+public bool ReplyEnterGame(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, bool result, int masterID)
+{
+	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
+		__msg.SimplePacketMode = core.IsSimplePacketMode();
+		Nettention.Proud.RmiID __msgid= Common.ReplyEnterGame;
+		__msg.Write(__msgid);
+		SngClient.Marshaler.Write(__msg, groupID);
+		SngClient.Marshaler.Write(__msg, result);
+		SngClient.Marshaler.Write(__msg, masterID);
+		
+	Nettention.Proud.HostID[] __list = new Nettention.Proud.HostID[1];
+	__list[0] = remote;
+		
+	return RmiSend(__list,rmiContext,__msg,
+		RmiName_ReplyEnterGame, Common.ReplyEnterGame);
+}
+
+public bool ReplyEnterGame(Nettention.Proud.HostID[] remotes,Nettention.Proud.RmiContext rmiContext, int groupID, bool result, int masterID)
+{
+	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
+__msg.SimplePacketMode = core.IsSimplePacketMode();
+Nettention.Proud.RmiID __msgid= Common.ReplyEnterGame;
+__msg.Write(__msgid);
+SngClient.Marshaler.Write(__msg, groupID);
+SngClient.Marshaler.Write(__msg, result);
+SngClient.Marshaler.Write(__msg, masterID);
+		
+	return RmiSend(remotes,rmiContext,__msg,
+		RmiName_ReplyEnterGame, Common.ReplyEnterGame);
+}
 public bool NotifyAddTree(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, int treeID, UnityEngine.Vector3 position)
 {
 	Nettention.Proud.Message __msg=new Nettention.Proud.Message();
@@ -169,6 +199,7 @@ SngClient.Marshaler.Write(__msg, newMasterID);
 // RMI name declaration.
 // It is the unique pointer that indicates RMI name such as RMI profiler.
 public const string RmiName_ReplyLogon="ReplyLogon";
+public const string RmiName_ReplyEnterGame="ReplyEnterGame";
 public const string RmiName_NotifyAddTree="NotifyAddTree";
 public const string RmiName_NotifyRemoveTree="NotifyRemoveTree";
 public const string RmiName_NotifyPlayerJoin="NotifyPlayerJoin";
@@ -179,6 +210,7 @@ public const string RmiName_First = RmiName_ReplyLogon;
 // RMI name declaration.
 // It is the unique pointer that indicates RMI name such as RMI profiler.
 public const string RmiName_ReplyLogon="";
+public const string RmiName_ReplyEnterGame="";
 public const string RmiName_NotifyAddTree="";
 public const string RmiName_NotifyRemoveTree="";
 public const string RmiName_NotifyPlayerJoin="";

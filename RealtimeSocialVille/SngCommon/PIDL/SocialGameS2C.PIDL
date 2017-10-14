@@ -2,6 +2,7 @@
 global SocialGameS2C 4000
 {
 	ReplyLogon([in] int groupID, [in] int result, [in] String comment, [in] bool isMaster);
+	ReplyEnterGame([in] int groupID, [in] bool result, [in] int masterID);
 	NotifyAddTree([in] int groupID, [in] int treeID, [in] UnityEngine.Vector3 position);
 	NotifyRemoveTree([in] int groupID, [in] int treeID);
 	NotifyPlayerJoin([in] int groupID, [in] String nick, [in] int idx);

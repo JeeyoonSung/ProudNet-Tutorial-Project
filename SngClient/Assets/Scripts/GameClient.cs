@@ -70,13 +70,6 @@ public partial class GameClient : MonoBehaviour {
 
 	void Update () {
         m_netClient.FrameMove();    //FrameMove를 통해 이벤트 통지
-
-        switch(m_state)
-        {
-            case State.StandBy:
-                Update_InVille();
-                break;
-        }
 	}
 
     public void OnGUI()

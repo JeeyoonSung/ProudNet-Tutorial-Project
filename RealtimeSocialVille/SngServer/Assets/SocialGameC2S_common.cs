@@ -14,11 +14,13 @@ namespace SocialGameC2S
 	{
 		// Message ID that replies to each RMI method. 
 			public const Nettention.Proud.RmiID RequestLogon = (Nettention.Proud.RmiID)3000+1;
-			public const Nettention.Proud.RmiID RequestAddTree = (Nettention.Proud.RmiID)3000+2;
-			public const Nettention.Proud.RmiID RequestRemoveTree = (Nettention.Proud.RmiID)3000+3;
+			public const Nettention.Proud.RmiID RequestEnterGame = (Nettention.Proud.RmiID)3000+2;
+			public const Nettention.Proud.RmiID RequestAddTree = (Nettention.Proud.RmiID)3000+3;
+			public const Nettention.Proud.RmiID RequestRemoveTree = (Nettention.Proud.RmiID)3000+4;
 		// List that has RMI ID.
 		public static Nettention.Proud.RmiID[] RmiIDList = new Nettention.Proud.RmiID[] {
 			RequestLogon,
+			RequestEnterGame,
 			RequestAddTree,
 			RequestRemoveTree,
 		};

@@ -21,6 +21,11 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
 		{ 
 			return false;
 		};
+		public delegate bool ReplyEnterGameDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, bool result, int masterID);  
+		public ReplyEnterGameDelegate ReplyEnterGame = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, bool result, int masterID)
+		{ 
+			return false;
+		};
 		public delegate bool NotifyAddTreeDelegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, int treeID, UnityEngine.Vector3 position);  
 		public NotifyAddTreeDelegate NotifyAddTree = delegate(Nettention.Proud.HostID remote,Nettention.Proud.RmiContext rmiContext, int groupID, int treeID, UnityEngine.Vector3 position)
 		{ 
@@ -59,6 +64,9 @@ public BeforeRmiInvocationDelegate BeforeRmiInvocation = delegate(Nettention.Pro
 		{
         case Common.ReplyLogon:
             ProcessReceivedMessage_ReplyLogon(__msg, pa, hostTag, remote);
+            break;
+        case Common.ReplyEnterGame:
+            ProcessReceivedMessage_ReplyEnterGame(__msg, pa, hostTag, remote);
             break;
         case Common.NotifyAddTree:
             ProcessReceivedMessage_NotifyAddTree(__msg, pa, hostTag, remote);
@@ -132,6 +140,60 @@ parameterString+=isMaster.ToString()+",";
         Nettention.Proud.AfterRmiSummary summary = new Nettention.Proud.AfterRmiSummary();
         summary.rmiID = Common.ReplyLogon;
         summary.rmiName = RmiName_ReplyLogon;
+        summary.hostID = remote;
+        summary.hostTag = hostTag;
+        summary.elapsedTime = Nettention.Proud.PreciseCurrentTime.GetTimeMs()-t0;
+        AfterRmiInvocation(summary);
+        }
+    }
+    void ProcessReceivedMessage_ReplyEnterGame(Nettention.Proud.Message __msg, Nettention.Proud.ReceivedMessage pa, Object hostTag, Nettention.Proud.HostID remote)
+    {
+        Nettention.Proud.RmiContext ctx = new Nettention.Proud.RmiContext();
+        ctx.sentFrom=pa.RemoteHostID;
+        ctx.relayed=pa.IsRelayed;
+        ctx.hostTag=hostTag;
+        ctx.encryptMode = pa.EncryptMode;
+        ctx.compressMode = pa.CompressMode;
+
+        int groupID; SngClient.Marshaler.Read(__msg,out groupID);	
+bool result; SngClient.Marshaler.Read(__msg,out result);	
+int masterID; SngClient.Marshaler.Read(__msg,out masterID);	
+core.PostCheckReadMessage(__msg, RmiName_ReplyEnterGame);
+        if(enableNotifyCallFromStub==true)
+        {
+        string parameterString = "";
+        parameterString+=groupID.ToString()+",";
+parameterString+=result.ToString()+",";
+parameterString+=masterID.ToString()+",";
+        NotifyCallFromStub(Common.ReplyEnterGame, RmiName_ReplyEnterGame,parameterString);
+        }
+
+        if(enableStubProfiling)
+        {
+        Nettention.Proud.BeforeRmiSummary summary = new Nettention.Proud.BeforeRmiSummary();
+        summary.rmiID = Common.ReplyEnterGame;
+        summary.rmiName = RmiName_ReplyEnterGame;
+        summary.hostID = remote;
+        summary.hostTag = hostTag;
+        BeforeRmiInvocation(summary);
+        }
+
+        long t0 = Nettention.Proud.PreciseCurrentTime.GetTimeMs();
+
+        // Call this method.
+        bool __ret =ReplyEnterGame (remote,ctx , groupID, result, masterID );
+
+        if(__ret==false)
+        {
+        // Error: RMI function that a user did not create has been called. 
+        core.ShowNotImplementedRmiWarning(RmiName_ReplyEnterGame);
+        }
+
+        if(enableStubProfiling)
+        {
+        Nettention.Proud.AfterRmiSummary summary = new Nettention.Proud.AfterRmiSummary();
+        summary.rmiID = Common.ReplyEnterGame;
+        summary.rmiName = RmiName_ReplyEnterGame;
         summary.hostID = remote;
         summary.hostTag = hostTag;
         summary.elapsedTime = Nettention.Proud.PreciseCurrentTime.GetTimeMs()-t0;
@@ -358,6 +420,7 @@ parameterString+=newMasterID.ToString()+",";
 // RMI name declaration.
 // It is the unique pointer that indicates RMI name such as RMI profiler.
 public const string RmiName_ReplyLogon="ReplyLogon";
+public const string RmiName_ReplyEnterGame="ReplyEnterGame";
 public const string RmiName_NotifyAddTree="NotifyAddTree";
 public const string RmiName_NotifyRemoveTree="NotifyRemoveTree";
 public const string RmiName_NotifyPlayerJoin="NotifyPlayerJoin";
@@ -368,6 +431,7 @@ public const string RmiName_First = RmiName_ReplyLogon;
 // RMI name declaration.
 // It is the unique pointer that indicates RMI name such as RMI profiler.
 public const string RmiName_ReplyLogon="";
+public const string RmiName_ReplyEnterGame="";
 public const string RmiName_NotifyAddTree="";
 public const string RmiName_NotifyRemoveTree="";
 public const string RmiName_NotifyPlayerJoin="";
